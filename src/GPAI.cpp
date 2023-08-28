@@ -166,6 +166,7 @@ Vector3 GPAI::get_next_navigation_pos() {
     return Vector3();
 }
 
+
 // ======================= Debug =======================
 
 void GPAI::clean_up_debugs() {
@@ -241,7 +242,7 @@ void GPAI::_bind_methods() {
 
     ClassDB::add_property("GPAI", PropertyInfo(Variant::FLOAT, "vision_cone_arc"), "set_vision_cone_arc", "get_vision_cone_arc");
     ClassDB::add_property("GPAI", PropertyInfo(Variant::OBJECT, "target", PROPERTY_HINT_NODE_TYPE, "Node3D"), "set_target", "get_target");
-    ClassDB::add_property("GPAI", PropertyInfo(Variant::BOOL, "has_los"), "set_los", "get_los");
+    ClassDB::add_property("GPAI", PropertyInfo(Variant::BOOL, "has_los", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NO_EDITOR | PROPERTY_USAGE_READ_ONLY), "set_los", "get_los");
     
     // Navigation
     ClassDB::add_property_group("GPAI", "Navigation", "nav_");
