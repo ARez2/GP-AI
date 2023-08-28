@@ -132,8 +132,7 @@ skeleton = NodePath("../..")
 [node name="GPAI" type="GPAI" parent="Agent" node_paths=PackedStringArray("target")]
 vision_cone_arc = 65.745
 target = NodePath("../../Target")
-use_navigation = true
-debug_show_vision_cone_arc = true
+nav_use_navigation = true
 
 [node name="NavAgent" type="NavigationAgent3D" parent="Agent/GPAI"]
 target_position = Vector3(0, 1.16386, -7.31925)

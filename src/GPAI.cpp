@@ -21,10 +21,10 @@ using namespace godot;
 GPAI::GPAI() {
     vision_cone_arc = 60.0;
     target = nullptr;
-    nav_region = nullptr;
     debug_show_vision_cone_arc = false;
-    use_navigation = false;
+    nav_use_navigation = false;
     nav_agent = nullptr;
+    nav_use_line_of_sight = true;
 }
 GPAI::~GPAI() {
 }
@@ -102,19 +102,12 @@ void GPAI::set_show_vision_cone_arc(bool show) {
     debug_toggle_vision_arc_mesh(show);
 }
 
-NavigationRegion3D* GPAI::get_nav_region() {
-    return nav_region;
-}
-void GPAI::set_nav_region(NavigationRegion3D* region) {
-    nav_region = region;
-}
-
 bool GPAI::get_use_navigation() {
-    return use_navigation;
+    return nav_use_navigation;
 }
 void GPAI::set_use_navigation(bool use_nav) {
     UtilityFunctions::print("Use nav: ", use_nav);
-    use_navigation = use_nav;
+    nav_use_navigation = use_nav;
     if (!is_inside_tree()) {
         return;
     }
@@ -133,6 +126,13 @@ void GPAI::set_use_navigation(bool use_nav) {
         nav_agent->queue_free();
         nav_agent = nullptr;
     }
+}
+
+bool GPAI::get_use_nav_los() {
+    return nav_use_line_of_sight;
+}
+void GPAI::set_use_nav_los(bool use_los) {
+    nav_use_line_of_sight = use_los;
 }
 
 // ======================= Vision =======================
@@ -154,11 +154,11 @@ Vector3 GPAI::get_next_navigation_pos() {
         return Vector3();
     }
 
-    if (has_los) {
+    if (nav_use_line_of_sight && has_los) {
         return get_global_position() + get_global_position().direction_to(target->get_global_position());
     }
 
-    if (use_navigation && nav_agent != nullptr) {
+    if (nav_use_navigation && nav_agent != nullptr) {
         UtilityFunctions::print("nav_agent->get_next_path_position()");
         return nav_agent->get_next_path_position();
     }
@@ -233,17 +233,20 @@ void GPAI::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_los", "los"), &GPAI::set_los);
     ClassDB::bind_method(D_METHOD("get_show_vision_cone_arc"), &GPAI::get_show_vision_cone_arc);
     ClassDB::bind_method(D_METHOD("set_show_vision_cone_arc", "show"), &GPAI::set_show_vision_cone_arc);
-    ClassDB::bind_method(D_METHOD("set_nav_region", "region"), &GPAI::set_nav_region);
-    ClassDB::bind_method(D_METHOD("get_nav_region"), &GPAI::get_nav_region);
     ClassDB::bind_method(D_METHOD("get_use_navigation"), &GPAI::get_use_navigation);
     ClassDB::bind_method(D_METHOD("set_use_navigation", "use_nav"), &GPAI::set_use_navigation);
     ClassDB::bind_method(D_METHOD("get_next_navigation_pos"), &GPAI::get_next_navigation_pos);
+    ClassDB::bind_method(D_METHOD("get_use_nav_los"), &GPAI::get_use_nav_los);
+    ClassDB::bind_method(D_METHOD("set_use_nav_los", "use_los"), &GPAI::set_use_nav_los);
 
     ClassDB::add_property("GPAI", PropertyInfo(Variant::FLOAT, "vision_cone_arc"), "set_vision_cone_arc", "get_vision_cone_arc");
     ClassDB::add_property("GPAI", PropertyInfo(Variant::OBJECT, "target", PROPERTY_HINT_NODE_TYPE, "Node3D"), "set_target", "get_target");
     ClassDB::add_property("GPAI", PropertyInfo(Variant::BOOL, "has_los"), "set_los", "get_los");
-    ClassDB::add_property("GPAI", PropertyInfo(Variant::BOOL, "use_navigation"), "set_use_navigation", "get_use_navigation");
-    //ClassDB::add_property("GPAI", PropertyInfo(Variant::NODE_PATH, "nav_region", PROPERTY_HINT_NODE_PATH_VALID_TYPES, "NavigationRegion3D"), "set_nav_region", "get_nav_region");
+    
+    // Navigation
+    ClassDB::add_property_group("GPAI", "Navigation", "nav_");
+    ClassDB::add_property("GPAI", PropertyInfo(Variant::BOOL, "nav_use_navigation"), "set_use_navigation", "get_use_navigation");
+    ClassDB::add_property("GPAI", PropertyInfo(Variant::BOOL, "nav_use_line_of_sight"), "set_use_nav_los", "get_use_nav_los");
     
     //  Debug
     ClassDB::add_property_group("GPAI", "Debug", "debug_");
