@@ -1,0 +1,53 @@
+{
+    // this must be in .vscode/launch.json
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name":"godot-gdscript-attach",
+            "type": "godot",// godot
+            "request": "launch",
+            "project": "${workspaceFolder}/godot/project.godot",
+            "port": 6007,
+            "address": "127.0.0.1",
+            "launch_game_instance": false,
+            "launch_scene": false
+        },
+        {
+            "name": "godot-cpp-launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${config:godot_tools.editor_path}",
+            "args": [
+                "--editor",
+                "--debug",
+                "--remote-debug", 
+                "tls://NICKELLA/127.0.0.1:6007",
+                "--path", 
+                "${workspaceFolder}\\godot"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/godot/",
+            "environment": [],
+            "console": true
+        },
+        {
+            "name": "godot-cpp-attach",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${config:godot_tools.editor_path}",
+            "symbolLoadInfo": {
+                "loadAll": true,
+                "exceptionList": ""
+            },
+        },
+    ],
+    "compounds": [
+        {
+            "name": "godot-launch",
+            "configurations": [
+                //"godot-gdscript-attach",
+                "godot-cpp-launch"
+            ]
+        }
+    ]
+}

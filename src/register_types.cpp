@@ -11,9 +11,11 @@
 
 using namespace godot;
 
+const ModuleInitializationLevel INIT_LEVEL = MODULE_INITIALIZATION_LEVEL_SCENE;
+
 // Note: It is not recommended to rename that function, except you know what you are doing
 void initialize_GPAI_module(ModuleInitializationLevel p_level) {
-    if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+    if (p_level != INIT_LEVEL) {
         return;
     }
 
@@ -22,7 +24,7 @@ void initialize_GPAI_module(ModuleInitializationLevel p_level) {
 
 // Note: It is not recommended to rename that function, except you know what you are doing
 void uninitialize_GPAI_module(ModuleInitializationLevel p_level) {
-    if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+    if (p_level != INIT_LEVEL) {
         return;
     }
 }
@@ -35,10 +37,8 @@ GDExtensionBool GDE_EXPORT GPAI_library_init(const GDExtensionInterfaceGetProcAd
 
     init_obj.register_initializer(initialize_GPAI_module);
     init_obj.register_terminator(uninitialize_GPAI_module);
-    init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
+    init_obj.set_minimum_library_initialization_level(INIT_LEVEL);
 
     return init_obj.init();
 }
 }
-
-    

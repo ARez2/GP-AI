@@ -1,11 +1,13 @@
 extends Node3D
 
+@export_group("Debug", "DEBUG")
+@export var DEBUG_SHOW = false
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	$GPAI.target = get_tree().get_first_node_in_group("target") as Node3D
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	$Indicator.visible = $GPAI.has_los()
+	$Indicator.visible = $GPAI.is_inside_vision_cone(-global_transform.basis.z) and $GPAI.get_los()
+	$GPAI.get_next_navigation_pos()

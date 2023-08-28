@@ -12,6 +12,7 @@ export_presets.cfg
 
 **/bin/*
 !**/bin/*.gdextension
+!**/GPAI/bin/*
 
 .vs/**
 !.vs/launch.vs.json

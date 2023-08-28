@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="GeneralPurposeAI"
+run/main_scene="res://addons/GPAI/demos/VisionTests.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 

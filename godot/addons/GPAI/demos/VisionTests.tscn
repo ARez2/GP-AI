@@ -1,6 +1,19 @@
-[gd_scene load_steps=11 format=3 uid="uid://dwa5nv8mywfr"]
+[gd_scene load_steps=20 format=3 uid="uid://dwa5nv8mywfr"]
 
 [ext_resource type="Script" path="res://addons/GPAI/demos/Agent.gd" id="1_g4v7j"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_kyct5"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_1w4i0"]
+sky_material = SubResource("ProceduralSkyMaterial_kyct5")
+
+[sub_resource type="Environment" id="Environment_ffpdm"]
+background_mode = 2
+sky = SubResource("Sky_1w4i0")
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iq65h"]
 albedo_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
@@ -32,13 +45,70 @@ uv1_world_triplanar = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_6nidk"]
 
+[sub_resource type="Animation" id="Animation_aoq7r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.16386, -7.31925)]
+}
+
+[sub_resource type="Animation" id="Animation_1e7ai"]
+resource_name = "move"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.16386, -7.31925), Vector3(10.1056, 1.16386, -7.31925)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kp6qv"]
+_data = {
+"RESET": SubResource("Animation_aoq7r"),
+"move": SubResource("Animation_1e7ai")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_eoksy"]
+size = Vector3(6, 7, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hxned"]
+size = Vector3(6, 7, 1)
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_x7vhl"]
+vertices = PackedVector3Array(-5.5, 0.5, -6.25, -4, 0.5, -6.25, -4.25, 0.5, -24.5, -24.5, 0.5, -5, -5.75, 0.5, -5, -5.5, 0.5, -6.25, -4.25, 0.5, -24.5, -24.5, 0.5, -24.5, -4, 0.5, -6.25, -0.25, 0.5, -6.25, 0, 0.5, -24.5, -4.25, 0.5, -24.5, 0, 0.5, -24.5, -0.25, 0.5, -6.25, 1.25, 0.5, -6.25, 0, 0.5, -24.5, 1.25, 0.5, -6.25, 1.5, 0.5, -5, 24.5, 0.5, -5, 24.5, 0.5, -24.5, -5.5, 0.5, -4, -5.75, 0.5, -5, -24.5, 0.5, -5, -24.5, 0.5, 24.5, -3.5, 0.5, 24.5, -3.5, 0.5, 24.5, -3.5, 0.5, -4, -5.5, 0.5, -4, 24.5, 0.5, -5, 1.5, 0.5, -5, 1.25, 0.5, -4, -0.75, 0.5, 24.5, 24.5, 0.5, 24.5, 1.25, 0.5, -4, -0.75, 0.5, -4, -0.75, 0.5, 24.5, -3.5, 0.5, 24.5, -0.75, 0.5, 24.5, -0.75, 0.5, -4, -3.5, 0.5, -4)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 5), PackedInt32Array(5, 3, 7), PackedInt32Array(5, 7, 6), PackedInt32Array(8, 11, 9), PackedInt32Array(9, 11, 10), PackedInt32Array(14, 13, 12), PackedInt32Array(16, 15, 17), PackedInt32Array(17, 15, 18), PackedInt32Array(18, 15, 19), PackedInt32Array(21, 20, 22), PackedInt32Array(22, 20, 23), PackedInt32Array(23, 20, 24), PackedInt32Array(27, 26, 25), PackedInt32Array(29, 28, 30), PackedInt32Array(30, 28, 32), PackedInt32Array(30, 32, 31), PackedInt32Array(35, 34, 33), PackedInt32Array(39, 38, 36), PackedInt32Array(36, 38, 37)]
+geometry_source_geometry_mode = 2
+geometry_source_group_name = &"nav"
+
 [node name="VisionTests" type="Node3D"]
 
-[node name="Floor" type="MeshInstance3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ffpdm")
+
+[node name="Floor" type="MeshInstance3D" parent="." groups=["nav"]]
 mesh = SubResource("PlaneMesh_t801c")
 
 [node name="Agent" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.0371789)
 script = ExtResource("1_g4v7j")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Agent"]
@@ -59,12 +129,43 @@ material_override = SubResource("StandardMaterial3D_gl1s3")
 mesh = SubResource("BoxMesh_1kyri")
 skeleton = NodePath("../..")
 
-[node name="GPAI" type="GPAI" parent="Agent"]
+[node name="GPAI" type="GPAI" parent="Agent" node_paths=PackedStringArray("target")]
+vision_cone_arc = 65.745
+target = NodePath("../../Target")
+use_navigation = true
+debug_show_vision_cone_arc = true
+
+[node name="NavAgent" type="NavigationAgent3D" parent="Agent/GPAI"]
+target_position = Vector3(0, 1.16386, -7.31925)
+debug_enabled = true
+debug_path_custom_color = Color(1, 0, 0, 1)
 
 [node name="Target" type="Node3D" parent="." groups=["target"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.16386, -7.31925)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Target"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.33724)
 material_override = SubResource("StandardMaterial3D_1yr0e")
 mesh = SubResource("SphereMesh_6nidk")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Target"]
+autoplay = "move"
+libraries = {
+"": SubResource("AnimationLibrary_kp6qv")
+}
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.190809, 0.981626, 0, -0.981628, 0.190809, 0, 9.036, -2.566)
+current = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." groups=["nav"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.13016, 0, -5.03718)
+mesh = SubResource("BoxMesh_eoksy")
+skeleton = NodePath("StaticBody3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("BoxShape3D_hxned")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_x7vhl")
